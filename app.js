@@ -1,7 +1,14 @@
 const http = require('http');
+const express = require('express');
 
-const server = http.createServer((req, res)=> {
-	console.log(req.url);	
+const app = express();
+
+app.use('/add-product', (req, res, next)=> {
+	res.send("<h1>This is add-product page.</h1>");
 });
 
-server.listen(3000);
+app.use('/', (req, res, next)=> {
+	res.send("<h1>Welcome to HomePage!</h1>");
+});
+
+app.listen(3000);
