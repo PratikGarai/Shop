@@ -8,10 +8,10 @@ A shopping website clone using NodeJS
 <li></li>
 </ul>
 
-<h3>Directory Explanation :</h3> <br>
+<h3>Directory Explanation :</h3>
 
-/app.js                :  Main module of the entire folder <br>
+/app.js                  :  Main module of the entire folder <br>
 
-/routes                :  Stores the url routing files<br>
-/routes/admin.js       :  Links available to shop admin<br>
-/routes/shop.js        :  Links available to shop visitors<br>
+/routes                  :  Stores the url routing files<br>
+
+/views                   :  Storing the html files to be served<br>
