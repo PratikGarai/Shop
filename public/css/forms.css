@@ -2,14 +2,20 @@
 	margin : 1rem 0;
 }
 .form-control label,
-.form-control input{
+.form-control input,
+.form-control textarea{
 	display : block;
 }
-.form-control input{
-	border : 2px solid #4b1680;
+.form-control input,
+.form-control textarea{
+	border : 2px solid #ccc;
 	font : inherit;
 	border-radius : 5px;
 	width : 100%;
+}
+.from-control input:focus,
+.form-control textarea:focus{
+	border-color : #4b1680;
 }
 button{
 	font : inherit;
