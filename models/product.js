@@ -13,7 +13,6 @@ module.exports = class Product {
 			'..',
 			'data',
 			'products.json');
-		console.log("save() : "+ p);
 		fs.readFile(p, (err , fileContent)=>{
 			let products = [];
 			if(!err){
@@ -32,7 +31,6 @@ module.exports = class Product {
 			'..',
 			'data',
 			'products.json');
-		console.log("fetchAll() : "+ p);
 		fs.readFile(p, (err, fileContent)=>{
 			if(err){
 				cb([]);
