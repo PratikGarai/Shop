@@ -202,3 +202,7 @@ form {
     display: none;
   }
 }
+
+.centered{
+	text-align : center;
+}
