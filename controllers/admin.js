@@ -4,6 +4,7 @@ exports.getAddProduct = (req, res, next)=> {
 	res.render('admin/add-product', {
 		pageTitle : 'Add Product',
 		path : '/admin/add-product',
+		editing : false,
 		});
 };
 
@@ -19,7 +20,6 @@ exports.postAddProduct = (req, res, next)=> {
 
 exports.getEditProduct = (req, res, next)=> {
 	const prodID = req.params.productId;
-	console.log(prodID);
 	Product.getById(prodID, product=>
 	{
 		if(!product)
@@ -28,7 +28,7 @@ exports.getEditProduct = (req, res, next)=> {
 		}
 		else
 		{
-			res.render('admin/edit-product', {
+			res.render('admin/add-product', {
 				pageTitle : 'Edit Product',
 				path : '/admin/edit-product',
 				editing : true,
