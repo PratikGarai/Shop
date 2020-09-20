@@ -20,7 +20,7 @@
 						<p class = "product__description"><%= product.description %></p>
 					</div>
 					<div class = "card__actions">
-						<button onclick="window.location.href='/admin/edit-product/'" class = "btn">Edit</button>
+						<button onclick="window.location.href='/admin/edit-product/<%= product.id %>'" class = "btn">Edit</button>
 						<br><br>
 						<form action="/admin/delete-product/" method="POST">
 							<button type="submit" class = "btn">Delete</button>

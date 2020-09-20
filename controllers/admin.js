@@ -17,6 +17,26 @@ exports.postAddProduct = (req, res, next)=> {
 	res.redirect("/");
 };
 
+exports.getEditProduct = (req, res, next)=> {
+	const prodID = req.params.productID;
+	Product.getById(prodID, product=>
+	{
+		if(!product)
+		{
+			res.redirect('/');
+		}
+		else
+		{
+			res.render('admin/edit-product', {
+				pageTitle : 'Edit Product',
+				path : '/admin/edit-product',
+				editing : true,
+				product : product
+				});
+		}
+	});
+};
+
 exports.getProducts = (req, res, next)=> {
 	Product.fetchAll( products => {
 	res.render('admin/products', {
