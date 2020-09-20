@@ -18,7 +18,8 @@ exports.postAddProduct = (req, res, next)=> {
 };
 
 exports.getEditProduct = (req, res, next)=> {
-	const prodID = req.params.productID;
+	const prodID = req.params.productId;
+	console.log(prodID);
 	Product.getById(prodID, product=>
 	{
 		if(!product)
