@@ -38,6 +38,17 @@ exports.getEditProduct = (req, res, next)=> {
 	});
 };
 
+exports.postEditProduct = (req, res, next)=> {
+	const id = req.params.productId;
+	const title = req.body.title;
+	const imageUrl = req.body.imageUrl;
+	const price = req.body.price;
+	const description = req.body.description;
+	const product = new Product(title, imageUrl, description, price);
+	product.save(id);
+	res.redirect("/");
+};
+
 exports.getProducts = (req, res, next)=> {
 	Product.fetchAll( products => {
 	res.render('admin/products', {
