@@ -15,7 +15,7 @@ exports.postAddProduct = (req, res, next)=> {
 	const description = req.body.description;
 	const product = new Product(title, imageUrl, description, price);
 	product.save();
-	res.redirect("/");
+	res.redirect("/admin/products");
 };
 
 exports.getEditProduct = (req, res, next)=> {
@@ -46,13 +46,13 @@ exports.postEditProduct = (req, res, next)=> {
 	const description = req.body.description;
 	const product = new Product(title, imageUrl, description, price);
 	product.save(id);
-	res.redirect("/");
+	res.redirect("/admin/products");
 };
 
 exports.postDeleteProduct = (req, res, next) =>{
 	const prodID = req.params.productId;
 	Product.delete_product(prodID);
-	res.redirect("/");
+	res.redirect("/admin/products");
 };
 
 exports.getProducts = (req, res, next)=> {
