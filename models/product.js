@@ -11,7 +11,7 @@ const p = path.join(
 
 const getProductsFromFile = cb => {
   	fs.readFile(p, (err, fileContent) => {
-    	if (err) {
+    	if (err || fileContent=="") {
       		cb([]);
     	} 
 	else {
@@ -40,7 +40,9 @@ module.exports = class Product {
       			products.push(this);
 		}
       		fs.writeFile(p, JSON.stringify(products), err => {
-        		console.log(err);
+			if(!err){
+        			console.log(err);
+			}
       			});
     		});
   	}
@@ -62,7 +64,9 @@ module.exports = class Product {
 
 		Cart.deleteProduct(id, product.price);
       		fs.writeFile(p, JSON.stringify(newProducts), err => {
+			if(!err){
         		console.log(err);
+			}
       			});
     		});
 
