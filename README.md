@@ -6,4 +6,5 @@ A shopping website clone using NodeJS
 <li>nodemon <em>(Dev Dependency)</em></li>
 <li>body-parser</li>
 <li>ejs</li>
+<li>mysql2</li>
 </ul>
