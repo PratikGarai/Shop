@@ -206,3 +206,7 @@ form {
 .centered{
 	text-align : center;
 }
+
+.product__description-image img {
+    height : 30rem;
+}
