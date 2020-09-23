@@ -7,4 +7,5 @@ A shopping website clone using NodeJS
 <li>body-parser</li>
 <li>ejs</li>
 <li>mysql2</li>
+<li>sequelize</li>
 </ul>
