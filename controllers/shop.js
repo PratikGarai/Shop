@@ -1,13 +1,13 @@
-const Product  = require('../models/product');
 const Cart = require('../models/cart');
+const Product  = require('../models/product');
 
 exports.getProducts = (req, res, next)=> {
 	Product
-		.fetchAll()
-		.then( ([rows, fieldData])=> {
+		.findAll()
+		.then(products=> {
 			res.render('shop/product-list', {
 				pageTitle : "Shop", 
-				prods : rows,
+				prods : products,
 				path : '/products'
 			});
 		})
@@ -32,11 +32,12 @@ exports.getProduct = (req, res, next)=> {
 };
 
 exports.getIndex = (req, res, next)=>{
-	Product.fetchAll()
-		.then( ([rows, fieldData])=> {
+	Product
+		.findAll()
+		.then(products=> {
 			res.render('shop/product-list', {
 				pageTitle : "Shop", 
-				prods : rows,
+				prods : products,
 				path : '/'
 			});
 		})
