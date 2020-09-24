@@ -5,6 +5,7 @@ const adminRoutes = require('./routes/admin.js');
 const shopRoutes = require('./routes/shop.js');
 const path = require("path");
 const globalController = require('./controllers/globalPages');
+const sequelize = require('./util/database');
 
 const app = express();
 
@@ -17,4 +18,13 @@ app.use(shopRoutes);
 app.use(express.static( path.join(__dirname,'public') ));
 
 app.use('/', globalController.get404 );
-app.listen(3000);
+
+sequelize
+	.sync()
+	.then( result => {
+		app.listen(3000);
+		// console.log(result);
+	})
+	.catch( err => {
+		console.log(err);
+	});
