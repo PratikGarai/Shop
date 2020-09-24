@@ -13,15 +13,17 @@ exports.postAddProduct = (req, res, next)=> {
 	const imageUrl = req.body.imageUrl;
 	const price = req.body.price;
 	const description = req.body.description;
-	Product.create({
+	Product
+		.create({
 		title : title,
 		price : price,
 		imageUrl : imageUrl,
 		description : description
-	})
+		})
 		.then( result => {
 			// console.log(result);
 			console.log("Product added to database");
+			res.redirect("/admin/products");
 		})
 		.catch(err => {
 			console.log(err)
@@ -60,19 +62,34 @@ exports.postEditProduct = (req, res, next)=> {
 			product.imageUrl = imageUrl;
 			product.price = price;
 			product.description = description;
-			product.save();
+			return product.save();
+		})
+		.then( result => {
+			console.log("Updated Product successfully");
+			console.log(result);
 			res.redirect("/admin/products");
 		})
 		.catch( err => {
 			console.log("Error while fetching");
 			console.log("Error");
+			res.redirect("/admin/products");
 		});
 };
 
 exports.postDeleteProduct = (req, res, next) =>{
 	const prodID = req.params.productId;
-	Product.delete_product(prodID);
-	res.redirect("/admin/products");
+	Product
+		.findByPk(prodID)
+		.then( product => product.destroy() )
+		.then( result => {
+			console.log("Product deleted");
+			res.redirect("/admin/products");
+		})
+		.catch( err => {
+			console.log("Error while fetching");
+			console.log("Error");
+			res.redirect("/admin/products");
+		});
 };
 
 exports.getProducts = (req, res, next)=> {
