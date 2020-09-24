@@ -30,22 +30,21 @@ exports.postAddProduct = (req, res, next)=> {
 
 exports.getEditProduct = (req, res, next)=> {
 	const prodID = req.params.productId;
-	Product.getById(prodID, product=>
-	{
-		if(!product)
-		{
-			res.redirect('/');
-		}
-		else
-		{
+	Product
+		.findByPk(prodID)
+		.then( product => {
 			res.render('admin/add-product', {
 				pageTitle : 'Edit Product',
 				path : '/admin/edit-product',
 				editing : true,
 				product : product
-				});
-		}
-	});
+			});
+		})
+		.catch ( err => {
+			console.log("Error : ");
+			console.log(err);
+			res.redirect('/');
+		});
 };
 
 exports.postEditProduct = (req, res, next)=> {
@@ -54,9 +53,20 @@ exports.postEditProduct = (req, res, next)=> {
 	const imageUrl = req.body.imageUrl;
 	const price = req.body.price;
 	const description = req.body.description;
-	const product = new Product(title, imageUrl, description, price);
-	product.save(id);
-	res.redirect("/admin/products");
+	Product
+		.findByPk(id)
+		.then(product => {
+			product.title = title;
+			product.imageUrl = imageUrl;
+			product.price = price;
+			product.description = description;
+			product.save();
+			res.redirect("/admin/products");
+		})
+		.catch( err => {
+			console.log("Error while fetching");
+			console.log("Error");
+		});
 };
 
 exports.postDeleteProduct = (req, res, next) =>{

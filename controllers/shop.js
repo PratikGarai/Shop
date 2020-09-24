@@ -17,9 +17,8 @@ exports.getProducts = (req, res, next)=> {
 exports.getProduct = (req, res, next)=> {
 	const prodId = req.params.productId;
 	Product
-		.getById(prodId)
-		.then(([row,fieldData])=>{
-			product = row[0];
+		.findByPk(prodId)
+		.then(product=>{
 			res.render('shop/product-detail',{
 				pageTitle : product.title+" : Details",
 				product : product,
@@ -27,8 +26,6 @@ exports.getProduct = (req, res, next)=> {
 			});
 		})
 		.catch((err) => console.log(err));
-	Product.getById( prodId , product => {
-	});
 };
 
 exports.getIndex = (req, res, next)=>{
