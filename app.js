@@ -60,6 +60,9 @@ sequelize
 		return user;
 	})
 	.then( user => {
+		return user.createCart();
+	})
+	.then( cart => {
 		// console.log(user);
 		console.log("Starting server....");
 		app.listen(3000);
