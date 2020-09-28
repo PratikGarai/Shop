@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 // const shopRoutes = require('./routes/shop.js');
 const path = require("path");
 const globalController = require('./controllers/globalPages');
-const mongoConnect = require('./util/database');
+const mongoConnect = require('./util/database').mongoConnect;
 
 const app = express();
 
