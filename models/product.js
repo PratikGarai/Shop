@@ -16,9 +16,7 @@ class Product
 		return db
 			.collection('products')
 			.insertOne(this)
-			.then( result => {
-				console.log(result)
-			})
+			.then()
 			.catch(err => {
 				console.log(err);
 			});
@@ -32,7 +30,6 @@ class Product
 			.find()
 			.toArray()
 			.then( products => {
-				console.log(products);
 				return products;
 			})
 			.catch( err => {

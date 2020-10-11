@@ -2,7 +2,7 @@ const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const adminRoutes = require('./routes/admin.js');
-// const shopRoutes = require('./routes/shop.js');
+const shopRoutes = require('./routes/shop.js');
 const path = require("path");
 const globalController = require('./controllers/globalPages');
 const mongoConnect = require('./util/database').mongoConnect;
@@ -27,7 +27,7 @@ app.use(express.static( path.join(__dirname,'public') ));
 // });
 
 app.use('/admin', adminRoutes);
-// app.use(shopRoutes);
+app.use(shopRoutes);
 
 app.use('/', globalController.get404 );
 
