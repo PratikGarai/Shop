@@ -32,6 +32,6 @@ app.use('/admin', adminRoutes);
 app.use('/', globalController.get404 );
 
 mongoConnect( () => {
-	console.log("Starting Server");
-	app.listen(3000);
-});
+		console.log("Starting Server");
+		app.listen(3000);
+	});
