@@ -15,19 +15,19 @@ exports.getProducts = (req, res, next)=> {
 		.catch(err => console.log(err));
 };
 
-// exports.getProduct = (req, res, next)=> {
-// 	const prodId = req.params.productId;
-// 	Product
-// 		.findByPk(prodId)
-// 		.then(product=>{
-// 			res.render('shop/product-detail',{
-// 				pageTitle : product.title+" : Details",
-// 				product : product,
-// 				path : '/products'
-// 			});
-// 		})
-// 		.catch((err) => console.log(err));
-// };
+exports.getProduct = (req, res, next)=> {
+	const prodId = req.params.productId;
+	Product
+		.findById(prodId)
+		.then(product=>{
+			res.render('shop/product-detail',{
+				pageTitle : product.title+" : Details",
+				product : product,
+				path : '/products'
+			});
+		})
+		.catch((err) => console.log(err));
+};
 
 exports.getIndex = (req, res, next)=>{
 	Product
