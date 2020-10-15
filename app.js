@@ -21,7 +21,6 @@ app.use((req, res, next)=>{
 		.findById('5f87a8463145b87e5821c38f')
 		.then( user=> {
 			req.user = user;
-			console.log("Binded user to request");
 			next();
 		})
 		.catch(err => {
