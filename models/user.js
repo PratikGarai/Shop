@@ -25,6 +25,20 @@ class User
 			});
 	}
 
+	static findById(userId)
+	{
+		const db = getDb();
+		return db
+			.collection('users')
+			.findOne({ _id : new mongodb.ObjectId(userId)})
+			.then( result => {
+				return result;
+			})
+			.catch(err => {
+				console.log("Error");
+			});
+	}
+
 	addToCart(product)
 	{
 		const cartProductIndex = this.cart.items.findIndex(cp =>{
@@ -95,18 +109,21 @@ class User
 				);
 	}
 
-	static findById(userId)
+	addOrder()
 	{
 		const db = getDb();
 		return db
-			.collection('users')
-			.findOne({ _id : new mongodb.ObjectId(userId)})
-			.then( result => {
-				return result;
-			})
-			.catch(err => {
-				console.log("Error");
-			});
+		  .collection('orders')
+		  .insertOne(this.cart)
+		  .then(result => {
+			  this.cart = {items : []};
+			  return db
+			    .collection('users')
+			    .updateOne(
+				  {_id : new mongodb.ObjectID(this._id)},
+				  {$set : {cart : {items : [] }}}
+				  );
+		  });
 	}
 }
 
