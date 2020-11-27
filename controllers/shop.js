@@ -58,8 +58,21 @@ exports.getIndex = (req, res, next)=>{
 // 		.catch(err => console.log(err));
 // };
 
-// exports.postCart = (req, res, next)=>{
-// 	const prodId = req.body.productId;
+ exports.postCart = (req, res, next)=>{
+	 const prodId = req.body.productId;
+	 const product = Product
+						 .findById(prodId)
+						 .then(product => {
+							 return req.user.addToCart(product);
+						 })
+						 .then(result => {
+							 console.log(result);
+						 })
+						 .catch(error => {
+							 console.log(error);
+						 });
+};
+
 // 	let fetchedCart;
 // 	let newQuantity = 1;
 // 	req.user
