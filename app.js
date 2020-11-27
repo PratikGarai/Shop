@@ -1,12 +1,16 @@
 const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require("path");
+const mongoose  = require("mongoose");
+
 const adminRoutes = require('./routes/admin.js');
 const shopRoutes = require('./routes/shop.js');
-const path = require("path");
+
 const globalController = require('./controllers/globalPages');
-const mongoConnect = require('./util/database').mongoConnect;
+
 const User = require('./models/user');
+
 
 const app = express();
 
@@ -33,7 +37,11 @@ app.use(shopRoutes);
 
 app.use('/', globalController.get404 );
 
-mongoConnect( () => {
-		console.log("Starting Server");
-		app.listen(3000);
-	});
+mongoose.connect("mongodb+srv://pratik:pratik@cluster0.cflq7.gcp.mongodb.net/shop?retryWrites=true&w=majority")
+		.then( res => {
+			console.log("Starting server");
+			app.listen(3000);
+		})
+		.catch(err => {
+			console.log(err);			
+		});
