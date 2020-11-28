@@ -86,7 +86,7 @@ exports.postDeleteProduct = (req, res, next) =>{
 
 exports.getProducts = (req, res, next)=> {
 	Product
-		.fetchAll()
+		.find()
 		.then( products=> {
 			res.render('admin/products', {
 				pageTitle : "Admin Products",
