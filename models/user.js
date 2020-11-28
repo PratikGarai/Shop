@@ -17,7 +17,8 @@ const userSchema = new Schema({
         items : [{
             productId : {
                 type : Schema.Types.ObjectId,
-                required : true
+                required : true,
+                ref : 'Product'
             },
             quantity : {
                 type : Number,
@@ -26,3 +27,5 @@ const userSchema = new Schema({
         }]
     }
 })
+
+module.exports = mongoose.model("User", userSchema);
