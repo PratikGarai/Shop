@@ -58,9 +58,15 @@ exports.postEditProduct = (req, res, next)=> {
 	const price = req.body.price;
 	const description = req.body.description;
 	
-	const updatedProduct = new Product(title, price, description, imageUrl, new mongodb.ObjectId(id), new mongodb.ObjectId(req.user._id));
-	return updatedProduct
-		.save()
+	Product
+		.findById(id)
+		.then(product => {
+			product.title = title;
+			product.price = price;
+			product.imageUrl = imageUrl;
+			product.description = description;
+			return product.save();
+		})
 		.then( result => {
 			console.log("Updated Product successfully");
 			res.redirect("/admin/products");
