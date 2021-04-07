@@ -6,6 +6,7 @@ const mongoose  = require("mongoose");
 
 const adminRoutes = require('./routes/admin.js');
 const shopRoutes = require('./routes/shop.js');
+const authRoutes = require('./routes/auth.js');
 
 const globalController = require('./controllers/globalPages');
 
@@ -34,6 +35,7 @@ app.use((req, res, next)=>{
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
+app.use(authRoutes);
 
 app.use('/', globalController.get404 );
 
