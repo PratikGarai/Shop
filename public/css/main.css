@@ -19,10 +19,22 @@ form {
   display: inline;
 }
 
+.centered {
+  text-align: center;
+}
+
+.image {
+  height: 20rem;
+}
+
+.image img {
+  height: 100%;
+}
+
 .main-header {
   width: 100%;
   height: 3.5rem;
-  background-color: #4b1680;
+  background-color: #00695c;
   padding: 0 1.5rem;
   display: flex;
   align-items: center;
@@ -30,7 +42,7 @@ form {
 
 .main-header__nav {
   height: 100%;
-  width : 100%;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -48,15 +60,22 @@ form {
   padding: 0;
 }
 
-.main-header__item a {
+.main-header__item a,
+.main-header__item button {
+  font: inherit;
+  background: transparent;
+  border: none;
   text-decoration: none;
   color: white;
+  cursor: pointer;
 }
 
 .main-header__item a:hover,
 .main-header__item a:active,
-.main-header__item a.active {
-  color: #11ff0d;
+.main-header__item a.active,
+.main-header__item button:hover,
+.main-header__item button:active {
+  color: #ffeb3b;
 }
 
 .mobile-nav {
@@ -100,7 +119,7 @@ form {
 .mobile-nav__item a:active,
 .mobile-nav__item a:hover,
 .mobile-nav__item a.active {
-  background: #4b1680;
+  background: #00695c;
   color: white;
   border-radius: 3px;
 }
@@ -121,8 +140,8 @@ form {
 
 #side-menu-toggle:active,
 #side-menu-toggle:hover {
-  color: #11ff0d;
-  border-color: #11ff0d;
+  color: #ffeb3b;
+  border-color: #ffeb3b;
 }
 
 .backdrop {
@@ -182,8 +201,8 @@ form {
   padding: 0.25rem 1rem;
   text-decoration: none;
   font: inherit;
-  border: 1px solid #4b1680;
-  color: #4b1680;
+  border: 1px solid #00695c;
+  color: #00695c;
   background: white;
   border-radius: 3px;
   cursor: pointer;
@@ -191,7 +210,18 @@ form {
 
 .btn:hover,
 .btn:active {
-  background-color: #4b1680;
+  background-color: #00695c;
+  color: white;
+}
+
+.btn.danger {
+  color: red;
+  border-color: red;
+}
+
+.btn.danger:hover,
+.btn.danger:active {
+  background: red;
   color: white;
 }
 
@@ -203,12 +233,4 @@ form {
   #side-menu-toggle {
     display: none;
   }
-}
-
-.centered{
-	text-align : center;
-}
-
-.product__description-image img {
-    height : 30rem;
 }

@@ -36,29 +36,6 @@ app.use(session({
 	store : store,
 }))
 
-app.use((req, res, next)=>{
-
-	// The simple cookie example
-	const cookie_strings = req.get('Cookie').split(';');
-    const cookies = {};
-    cookie_strings.map(element => {
-        let [key, value] = element.trim().split('=');
-        cookies[key] = value;
-    })
-    console.log("Cookies : \n", cookies);
-	req.isLoggedIn = cookies.loggedIn==='true';
-
-	User
-		.findById('5fc21c8d01c44b545c817bc0')
-		.then( user=> {
-			req.user = user;
-			next();
-		})
-		.catch(err => {
-			console.log(err)
-		});
-});
-
 // Adding Routes
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
