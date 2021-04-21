@@ -20,8 +20,10 @@
 						<p class = "product__description"><%= product.description %></p>
 					</div>
 					<div class = "card__actions">
-						<button onclick="window.location.href='/products/<%= product._id %>'" class="btn">Details</button>
-						<%- include('../includes/add-to-cart.ejs', { product : product}) %>
+						<a href='/products/<%= product._id %>' class="btn">Details</a>
+						<% if (isLoggedIn) { %>
+							<%- include('../includes/add-to-cart.ejs', { product : product}) %>
+						<% } %>
 					</div>
 				</article>
 			<% } %>
