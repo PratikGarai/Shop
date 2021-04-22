@@ -62,21 +62,6 @@ mongoose.connect(MONGODB_URI, {
 			useUnifiedTopology : true,
 		})
 		.then( res => {
-			User
-			  .findOne()
-			  .then(user => {
-				  if(!user)
-				  {
-					const user = new User({
-					name : 'Pratik',
-					email : 'hello@test.com',
-					cart : {
-						items : []
-					}
-					});
-					user.save();
-				  }
-			  })
 			console.log("Starting server");
 			app.listen(3000);
 		})
