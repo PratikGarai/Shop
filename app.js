@@ -6,6 +6,7 @@ const path = require("path");
 const mongoose  = require("mongoose");
 const session = require('express-session');
 const MongoStore = require("connect-mongodb-session")(session);
+const csrf = require("csurf");
 
 // Routes and controllers and models imports
 const adminRoutes = require('./routes/admin.js');
@@ -20,7 +21,8 @@ const MONGODB_URI = "mongodb+srv://pratik:pratik@cluster0.cflq7.gcp.mongodb.net/
 const store = new MongoStore({
 	uri : MONGODB_URI,
 	collection : "sessions",
-})
+});
+const csrfProtection = csrf();
 
 // Setting engines
 app.set( "view engine" , "ejs");
@@ -34,7 +36,7 @@ app.use(session({
 	resave : false,
 	saveUninitialized : false,
 	store : store,
-}))
+}));
 app.use((req, res, next)=> {
 	if(!req.session.user){
 		return next();
@@ -48,7 +50,13 @@ app.use((req, res, next)=> {
 		.catch(err => {
 			console.log(err);
 		})
-})
+});
+app.use(csrfProtection);
+app.use((req, res, next)=> {
+	res.locals.isLoggedIn = req.session.isLoggedIn;
+	res.locals.csrfToken = req.csrfToken();
+	next();
+});
 
 // Adding Routes
 app.use('/admin', adminRoutes);

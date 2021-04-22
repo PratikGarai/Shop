@@ -44,7 +44,6 @@ exports.getEditProduct = (req, res, next)=> {
 				path : '/admin/edit-product',
 				editing : true,
 				product : product,
-				isLoggedIn : req.session.isLoggedIn,
 			});
 		})
 		.catch ( err => {
@@ -102,7 +101,6 @@ exports.getProducts = (req, res, next)=> {
 				pageTitle : "Admin Products",
 				prods : products,
 				path : '/admin/products',
-				isLoggedIn : req.session.isLoggedIn,
 			});
 		})
 		.catch(err => console.log(err));
