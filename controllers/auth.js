@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const sendgridTransport = require("nodemailer-sendgrid-transport");
 const secrets = require("../secrets");
+const crypto = require("crypto");
 
 const transporter = nodemailer.createTransport(sendgridTransport({
     auth : {
@@ -117,3 +118,55 @@ exports.postSignup = (req, res, next) => {
             console.log(err);
         });
 };
+
+exports.getReset = (req, res, next) => {
+    let message = req.flash('error');
+    if(message.length>0)
+        message = message[0];
+    else 
+        message = null;
+    res.render('auth/reset', {
+      path: '/reset',
+      pageTitle: 'Reset Password',
+      errorMessage : message
+    });
+};
+
+exports.postReset = (req, res, next) => {
+    crypto.randomBytes(32 , (err, buf)=> {
+        if(err) {
+            console.log("Error generating random value");
+            req.flash('error', 'Error in token generation');
+            return res.redirect('/reset');
+        }
+        const token = buf.toString('hex');
+        User
+            .findOne({email : req.body.email})
+            .then(user => {
+                if(!user){
+                    req.flash('error', 'User does not exist');
+                    return res.redirect('/reset');
+                }
+                user.resetToken = token;
+                user.resetTokenExpiration = Date.now() + 3600000;
+                return user.save();
+            })
+            .then(result => {
+                res.redirect('/');
+                return transporter.sendMail({
+                    to : req.body.email, 
+                    from : "pulugarai0208@gmail.com", 
+                    subject : "Password Reset Token", 
+                    html : `
+                    <p> You requested a password reset. Click this link reset you password (valid for the next hour)<br>
+                    <a href="${secrets.URL}/reset/${token}">Click Here!</a>
+                    </p>
+                    `
+                });
+            })
+            .catch(err => {
+                console.log("Error fetching user : ", err);
+                return res.redirect("/reset");
+            })
+    });
+}
