@@ -170,3 +170,67 @@ exports.postReset = (req, res, next) => {
             })
     });
 }
+
+exports.getNewPassword  = (req, res, next) => {
+    const token = req.params.token;
+    User
+        .findOne({resetToken : token, resetTokenExpiration : {$gt : Date.now()}})
+        .then(user => {
+            if(!user){
+                req.flash('error', 'Invalid token');
+                return res.redirect('/reset');
+            } else {
+                let message = req.flash('error');
+                if(message.length>0)
+                    message = message[0];
+                else 
+                    message = null;
+                res.render('auth/new-password', {
+                    path : '/new-password',
+                    pageTitle : 'Set New Passwrod',
+                    errorMessage : message,
+                    userId : user._id.toString(),
+                    token : token
+                });
+            }
+        })
+        .catch(err => {
+            console.log("Error fetching user");
+            return res.redirect('/reset');
+        });
+}
+
+exports.postNewPassword = (req, res, next) => {
+    const password1 = req.body.password1;
+    const password2 = req.body.password2;
+    const token = req.body.token;
+    if(password1!==password2) {
+        req.flash('error', 'Passwords don\'t match');
+        return res.redirect(`/reset/${token}`);
+    }
+
+    const userId = req.body.userId;
+    User
+        .findOne({resetToken : token, resetTokenExpiration : {$gt : Date.now()}, _id : userId})
+        .then(user => {
+            if(!user){
+                req.flash('error', 'Invalid token');
+                return res.redirect('/reset');
+            } else {
+                const newPass = bcrypt.hashSync(password1, 12);
+                user.resetToken = undefined;
+                user.resetTokenExpiration = undefined;
+                user.password = newPass;
+                return user.save();
+            }
+        })
+        .then(result => {
+            res.redirect('/login');
+        })
+        .catch(err => {
+            console.log("Error fetching user");
+            return res.redirect('/reset');
+        });
+
+    return res.redirect('/login');
+}
