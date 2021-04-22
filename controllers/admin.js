@@ -39,6 +39,10 @@ exports.getEditProduct = (req, res, next)=> {
 	Product
 		.findById(prodID)
 		.then( product => {
+			if(product.userId.toString() !== req.user._id.toString())
+			{
+				return res.redirect('/');
+			}
 			res.render('admin/add-product', {
 				pageTitle : 'Edit Product',
 				path : '/admin/edit-product',
@@ -63,25 +67,42 @@ exports.postEditProduct = (req, res, next)=> {
 	Product
 		.findById(id)
 		.then(product => {
+			if(product.userId.toString() !== req.user._id.toString())
+			{
+				return res.redirect('/');
+			}
 			product.title = title;
 			product.price = price;
 			product.imageUrl = imageUrl;
 			product.description = description;
-			return product.save();
-		})
-		.then( result => {
-			console.log("Updated Product successfully");
-			res.redirect("/admin/products");
-		})
-		.catch( err => {
-			console.log("Error while fetching");
-			console.log("Error");
-			res.redirect("/admin/products");
+			return product
+			.save()
+			.then( result => {
+				console.log("Updated Product successfully");
+				res.redirect("/admin/products");
+			})
+			.catch( err => {
+				console.log("Error while fetching");
+				res.redirect("/admin/products");
+			})
 		});
 };
 
 exports.postDeleteProduct = (req, res, next) =>{
 	const prodID = req.params.productId;
+	Product
+		.findById(prodID)
+		.then(product => {
+			if(product.userId.toString() !== req.user._id.toString())
+			{
+				return res.redirect('/');
+			}
+		})
+		.catch(err => {
+			console.log("Error fetching product");
+			res.redirect('/');
+		});
+
 	Product
 		.findByIdAndRemove(prodID)
 		.then( result => {
@@ -95,7 +116,7 @@ exports.postDeleteProduct = (req, res, next) =>{
 
 exports.getProducts = (req, res, next)=> {
 	Product
-		.find()
+		.find({userId : req.user._id})
 		.then( products=> {
 			res.render('admin/products', {
 				pageTitle : "Admin Products",
