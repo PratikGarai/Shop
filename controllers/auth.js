@@ -81,8 +81,8 @@ exports.getSignup = (req, res, next) => {
 exports.postSignup = (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
-    const confirmPassword = req.body.confirmPassword;
     const errors = validationResult(req);
+
     if(!errors.isEmpty()) {
         return res.status(422).render('auth/signup', {
             path: '/signup',
@@ -90,41 +90,26 @@ exports.postSignup = (req, res, next) => {
             errorMessage : errors.array()[0].msg,
         });
     }
-    User
-        .findOne({email : email})
-        .then(userDoc => {
-            if(userDoc){
-                req.flash('error', 'Email already in use.');
-                return res.redirect('/signup');
-            }
-            else if(password !== confirmPassword) {
-                req.flash('error', 'Passwords don\'t match.');
-                return res.redirect('/signup');
-            }
-            const hash  = bcrypt.hashSync(password, 12);
-            const user = new User({
-                email,
-                password : hash, 
-                cart : { items : [] }
+    const hash  = bcrypt.hashSync(password, 12);
+    const user = new User({
+        email,
+        password : hash, 
+        cart : { items : [] }
+    });
+    user
+        .save()
+        .then(result => {
+            res.redirect('/login');
+            return transporter.sendMail({
+                to : email, 
+                from : "pulugarai0208@gmail.com", 
+                subject : "SignUp successful", 
+                html : "<h1>Welcome To Shop Clone</h1>"
             });
-            user
-                .save()
-                .then(result => {
-                    res.redirect('/login');
-                    return transporter.sendMail({
-                        to : email, 
-                        from : "pulugarai0208@gmail.com", 
-                        subject : "SignUp successful", 
-                        html : "<h1>Welcome To Shop Clone</h1>"
-                    });
-                })
-                .catch(err => {
-                    console.log("Error sending email : ", err);
-                })
         })
         .catch(err => {
-            console.log(err);
-        });
+            console.log("Error sending email : ", err);
+        })
 };
 
 exports.getReset = (req, res, next) => {
