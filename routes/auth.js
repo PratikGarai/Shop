@@ -1,39 +1,60 @@
-const express = require("express");
-const authController = require('../controllers/auth.js');
-const {check, body} = require("express-validator/check");
-const User = require("../models/user");
+const express = require('express');
+const { check, body } = require('express-validator/check');
+const authController = require('../controllers/auth');
+const User = require('../models/user');
 const router = express.Router();
 
 router.get('/login', authController.getLogin);
 
-router.post('/login', authController.postLogin);
-
-router.post('/logout', authController.postLogout);
-
 router.get('/signup', authController.getSignup);
 
-router.post('/signup', 
-                [
-                    check("email")
-                        .isEmail()
-                        .withMessage("Please enter a valid email")
-                        .custom((value, {req})=> {
-                            return User.findOne({email : value}).then(userDoc => {
-                                if(userDoc)
-                                    return Promise.reject('Email already in use')
-                            })
-                        }),
-                    body("password", "Password should be atleast 6 characters long")
-                        .isLength({min : 6}), 
-                    body('confirmPassword')
-                        .custom((value, {req}) => {
-                            if(value!==req.body.password) {
-                                throw new Error('Passswords don\'t match');
-                            }
-                            return true
-                        })
-                ],
-                authController.postSignup);
+router.post(
+  '/login',
+  [
+    body('email')
+      .isEmail()
+      .withMessage('Please enter a valid email address.')
+      .normalizeEmail(),
+    body('password', 'Password has to be valid.')
+      .isLength({ min: 6 })
+      .trim()
+  ],
+  authController.postLogin
+);
+
+router.post(
+  '/signup',
+  [
+    check('email')
+      .isEmail()
+      .withMessage('Please enter a valid email.')
+      .custom((value, { req }) => {
+        return User.findOne({ email: value }).then(userDoc => {
+          if (userDoc) {
+            return Promise.reject('Email already in use.');
+          }
+        });
+      })
+      .normalizeEmail(),
+    body(
+      'password',
+      'Password should have atleast 6 characters.'
+    )
+      .isLength({ min: 6 })
+      .trim(),
+    body('confirmPassword')
+      .trim()
+      .custom((value, { req }) => {
+        if (value !== req.body.password) {
+          throw new Error('Passwords have to match!');
+        }
+        return true;
+      })
+  ],
+  authController.postSignup
+);
+
+router.post('/logout', authController.postLogout);
 
 router.get('/reset', authController.getReset);
 
