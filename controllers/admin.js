@@ -9,7 +9,8 @@ exports.getAddProduct = (req, res, next)=> {
 		editing : false,
 		isLoggedIn : req.session.isLoggedIn,
 		hasError : false,
-		errorMessage : null
+		errorMessage : null,
+		validationErrors : [],
 	});
 };
 
@@ -35,6 +36,7 @@ exports.postAddProduct = (req, res, next)=> {
 				description : description
 			}, 
 			errorMessage : errors.array()[0].msg,
+			validationErrors: errors.array(),
 		});
 	}
 
@@ -72,7 +74,8 @@ exports.getEditProduct = (req, res, next)=> {
 				editing : true,
 				product : product,
 				hasError : false,
-				errorMessage : null
+				errorMessage : null,
+				validationErrors: [],
 			});
 		})
 		.catch ( err => {
@@ -94,7 +97,7 @@ exports.postEditProduct = (req, res, next)=> {
 	{
 		return res.render('admin/add-product', {
 			pageTitle : 'Edit Product',
-			path : '/admin/edit-product',
+			path : '/admin/add-product',
 			editing : true,
 			isLoggedIn : req.session.isLoggedIn,
 			hasError : true, 
@@ -102,9 +105,11 @@ exports.postEditProduct = (req, res, next)=> {
 				title : title, 
 				imageUrl : imageUrl, 
 				price : price, 
-				description : description
+				description : description,
+				_id : id,
 			}, 
 			errorMessage : errors.array()[0].msg,
+			validationErrors: errors.array()
 		});
 	}
 	
