@@ -1,5 +1,6 @@
 const mongodb = require('mongodb');
 const Product  = require('../models/product');
+const {validationResult} = require('express-validator/check');
 
 exports.getAddProduct = (req, res, next)=> {
 	res.render('admin/add-product', {
@@ -7,7 +8,9 @@ exports.getAddProduct = (req, res, next)=> {
 		path : '/admin/add-product',
 		editing : false,
 		isLoggedIn : req.session.isLoggedIn,
-		});
+		hasError : false,
+		errorMessage : null
+	});
 };
 
 exports.postAddProduct = (req, res, next)=> {
@@ -15,6 +18,26 @@ exports.postAddProduct = (req, res, next)=> {
 	const imageUrl = req.body.imageUrl;
 	const price = req.body.price;
 	const description = req.body.description;
+
+	const errors = validationResult(req);
+	if(!errors.isEmpty())
+	{
+		return res.render('admin/add-product', {
+			pageTitle : 'Add Product',
+			path : '/admin/add-product',
+			editing : false,
+			isLoggedIn : req.session.isLoggedIn,
+			hasError : true, 
+			product : {
+				title : title, 
+				imageUrl : imageUrl, 
+				price : price, 
+				description : description
+			}, 
+			errorMessage : errors.array()[0].msg,
+		});
+	}
+
 	const product = new Product({
 		title : title, 
 		price : price, 
@@ -45,9 +68,11 @@ exports.getEditProduct = (req, res, next)=> {
 			}
 			res.render('admin/add-product', {
 				pageTitle : 'Edit Product',
-				path : '/admin/edit-product',
+				path : '/admin/add-product',
 				editing : true,
 				product : product,
+				hasError : false,
+				errorMessage : null
 			});
 		})
 		.catch ( err => {
@@ -63,6 +88,25 @@ exports.postEditProduct = (req, res, next)=> {
 	const imageUrl = req.body.imageUrl;
 	const price = req.body.price;
 	const description = req.body.description;
+
+	const errors = validationResult(req);
+	if(!errors.isEmpty())
+	{
+		return res.render('admin/add-product', {
+			pageTitle : 'Edit Product',
+			path : '/admin/edit-product',
+			editing : true,
+			isLoggedIn : req.session.isLoggedIn,
+			hasError : true, 
+			product : {
+				title : title, 
+				imageUrl : imageUrl, 
+				price : price, 
+				description : description
+			}, 
+			errorMessage : errors.array()[0].msg,
+		});
+	}
 	
 	Product
 		.findById(id)
