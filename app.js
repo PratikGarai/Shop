@@ -64,6 +64,7 @@ app.use(flash());
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
+app.use('/500', globalController.get500 );
 app.use('/', globalController.get404 );
 
 // Connect to database and start app
