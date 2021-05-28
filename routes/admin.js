@@ -16,8 +16,6 @@ router.post(
             .isString()
             .isLength({min : 3})
             .trim(),
-        body('imageUrl', "Not a valid image url")
-            .isURL(),
         body('price', "Price not a valid float value")
             .isFloat(),
         body('description', "Description should be 5-400 characters long")
@@ -36,8 +34,6 @@ router.post(
             .isString()
             .isLength({min : 3})
             .trim(),
-        body('imageUrl', "Not a valid image url")
-            .isURL(),
         body('price', "Price not a valid float value")
             .isFloat(),
         body('description', "Description should be 5-400 characters long")

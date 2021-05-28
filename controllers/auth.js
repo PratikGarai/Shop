@@ -250,7 +250,7 @@ exports.postNewPassword = (req, res, next) => {
             }
         })
         .then(result => {
-            res.redirect('/login');
+            return res.redirect('/login');
         })
         .catch(err => {
             console.log("Error fetching user");

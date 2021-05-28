@@ -8,6 +8,7 @@ const session = require('express-session');
 const MongoStore = require("connect-mongodb-session")(session);
 const csrf = require("csurf");
 const flash = require("connect-flash");
+const multer = require("multer");
 
 // Routes and controllers and models imports
 const adminRoutes = require('./routes/admin.js');
@@ -24,6 +25,22 @@ const store = new MongoStore({
 	collection : "sessions",
 });
 const csrfProtection = csrf();
+const fileStorage = multer.diskStorage({
+	destination : (req, file, cb) => {
+		cb(null, 'images');
+	}, 
+	filename : (req, file, cb) => {
+		cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname);
+	}
+});
+const fileFilter = (req, file, cb) => {
+	// call this if you want to save the file 
+	if(file.mimetype ==="image/png" || file.mimetype ==="image/jpg" || file.mimetype ==="image/jpeg" )
+		cb(null, true);
+	// call this if you don't want to save the file
+	else 
+		cb(null, false);
+}
 
 // Setting engines
 app.set( "view engine" , "ejs");
@@ -31,6 +48,7 @@ app.set( "views" , "views" );
 
 // Middlewares
 app.use(bodyParser.urlencoded({ 'extended' : false}));
+app.use(multer({storage : fileStorage, fileFilter : fileFilter }).single('image'));
 app.use(express.static( path.join(__dirname,'public') ));
 app.use(session({
 	secret : "pratik's secret",
@@ -64,7 +82,7 @@ app.use(flash());
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
-app.use('/500', globalController.get500 );
+app.use(globalController.get500 );
 app.use('/', globalController.get404 );
 
 // Connect to database and start app

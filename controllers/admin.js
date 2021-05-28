@@ -16,9 +16,26 @@ exports.getAddProduct = (req, res, next)=> {
 
 exports.postAddProduct = (req, res, next)=> {
 	const title = req.body.title;
-	const imageUrl = req.body.imageUrl;
 	const price = req.body.price;
 	const description = req.body.description;
+
+	const image = req.file;
+	if(!image) {
+		return res.render('admin/add-product', {
+			pageTitle : 'Add Product',
+			path : '/admin/add-product',
+			editing : false,
+			isLoggedIn : req.session.isLoggedIn,
+			hasError : true, 
+			product : {
+				title : title, 
+				price : price, 
+				description : description
+			}, 
+			errorMessage : "Attached file is not an image",
+			validationErrors: [],
+		});
+	}
 
 	const errors = validationResult(req);
 	if(!errors.isEmpty())
@@ -31,7 +48,6 @@ exports.postAddProduct = (req, res, next)=> {
 			hasError : true, 
 			product : {
 				title : title, 
-				imageUrl : imageUrl, 
 				price : price, 
 				description : description
 			}, 
@@ -44,7 +60,7 @@ exports.postAddProduct = (req, res, next)=> {
 		title : title, 
 		price : price, 
 		description : description, 
-		imageUrl : imageUrl,
+		imageUrl : image.path,
 		userId : req.user
 	});
 	product
@@ -88,9 +104,9 @@ exports.getEditProduct = (req, res, next)=> {
 exports.postEditProduct = (req, res, next)=> {
 	const id = req.params.productId;
 	const title = req.body.title;
-	const imageUrl = req.body.imageUrl;
 	const price = req.body.price;
 	const description = req.body.description;
+	const image = req.file;
 
 	const errors = validationResult(req);
 	if(!errors.isEmpty())
@@ -103,7 +119,6 @@ exports.postEditProduct = (req, res, next)=> {
 			hasError : true, 
 			product : {
 				title : title, 
-				imageUrl : imageUrl, 
 				price : price, 
 				description : description,
 				_id : id,
@@ -122,7 +137,9 @@ exports.postEditProduct = (req, res, next)=> {
 			}
 			product.title = title;
 			product.price = price;
-			product.imageUrl = imageUrl;
+
+			if(image)
+				product.imageUrl = image.path;
 			product.description = description;
 			return product
 			.save()
@@ -131,7 +148,7 @@ exports.postEditProduct = (req, res, next)=> {
 				res.redirect("/admin/products");
 			})
 			.catch( err => {
-				console.log("Error while fetching");
+				console.log("Error while updating : ", err);
 				res.redirect("/admin/products");
 			})
 		});

@@ -3,5 +3,7 @@ node_modules
 *.swp
 *.log
 
+images
+
 database.js
 secrets.js
