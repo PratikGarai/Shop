@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const Product  = require('../models/product');
 const Order = require('../models/order');
 const user = require('../models/user');
@@ -129,6 +131,22 @@ exports.getOrders = (req, res, next)=>{
  		})
  		.catch(err=> console.log(err));
 };
+
+exports.getInvoice = (req, res, next) => {
+	const orderId = req.params.orderId;
+	const invoiceName = 'invoice-'+orderId+'.txt';
+	const invoicePath = path.join('data', 'invoices', invoiceName);
+	fs.readFile(invoicePath, (err, data)=> {
+		if(err){
+			console.log("Error sending file")
+			return next();
+		}
+		else {
+			console.log("Sending file");
+			res.send(data);
+		}
+	})
+}
 
 // exports.getCheckout = (req, res, next)=>{
 // 	Product.fetchAll( products => {
