@@ -1,6 +1,7 @@
 const mongodb = require('mongodb');
 const Product  = require('../models/product');
 const {validationResult} = require('express-validator/check');
+const { deleteFile } = require('../util/fileUtils');
 
 exports.getAddProduct = (req, res, next)=> {
 	res.render('admin/add-product', {
@@ -138,8 +139,10 @@ exports.postEditProduct = (req, res, next)=> {
 			product.title = title;
 			product.price = price;
 
-			if(image)
+			if(image) {
+				deleteFile(product.imageUrl);
 				product.imageUrl = image.path;
+			}
 			product.description = description;
 			return product
 			.save()
@@ -168,6 +171,12 @@ exports.postDeleteProduct = (req, res, next) =>{
 			console.log("Error fetching product");
 			res.redirect('/');
 		});
+
+	Product
+		.findById(prodID)
+		.then(product => {
+			deleteFile(product.imageUrl);
+		})
 
 	Product
 		.findByIdAndRemove(prodID)
