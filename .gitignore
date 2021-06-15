@@ -4,6 +4,7 @@ node_modules
 *.log
 
 images
+invoices
 
 database.js
 secrets.js
