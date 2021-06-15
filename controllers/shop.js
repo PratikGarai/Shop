@@ -134,15 +134,30 @@ exports.getOrders = (req, res, next)=>{
 
 exports.getInvoice = (req, res, next) => {
 	const orderId = req.params.orderId;
+	Order
+		.findById(orderId)
+		.then(order => {
+			if(!order)
+				return next(new Error("File not found"));
+			if(order.user.userId.toString() !== req.user._id.toString()) {
+				return next(new Error("Unauthorized"));
+			}
+		})
+		.catch(err => {
+			return next(err);
+		});
+	
 	const invoiceName = 'invoice-'+orderId+'.txt';
 	const invoicePath = path.join('data', 'invoices', invoiceName);
 	fs.readFile(invoicePath, (err, data)=> {
 		if(err){
 			console.log("Error sending file")
-			return next();
+			return next(err);
 		}
 		else {
 			console.log("Sending file");
+			res.setHeader("Content-Type", "application/text");
+			res.setHeader("Content-Disposition", 'attachment; filename="Invoice.txt"');
 			res.send(data);
 		}
 	})
