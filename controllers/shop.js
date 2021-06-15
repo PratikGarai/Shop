@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const Product  = require('../models/product');
 const Order = require('../models/order');
-const user = require('../models/user');
+const PDFDocument = require("pdfkit");
 
 exports.getProducts = (req, res, next)=>{
 	Product
@@ -141,26 +141,44 @@ exports.getInvoice = (req, res, next) => {
 				return next(new Error("File not found"));
 			if(order.user.userId.toString() !== req.user._id.toString()) {
 				return next(new Error("Unauthorized"));
+			} else {
+				const invoiceName = 'invoice-'+orderId+'.pdf';
+				const invoicePath = path.join('data', 'invoices', invoiceName);
+			
+				res.setHeader("Content-Type", "application/pdf");
+				res.setHeader("Content-Disposition", 'attachment; filename="Invoice.pdf"');
+				const pdfDoc = new PDFDocument();
+				pdfDoc.fontSize(26).text("Invoice", {
+					underline : true
+				});
+				let totalPrice = 0;
+				pdfDoc.text("---------------------------------");
+				pdfDoc.fontSize(16);
+				order.products.forEach(prod => {
+					pdfDoc.text(
+						prod.productData.title + 
+						" - " + 
+						prod.quantity + 
+						" x " + 
+						" $" + 
+						prod.productData.price);
+					totalPrice += prod.quantity*prod.productData.price
+				});
+				pdfDoc.text("---------------------------------");
+				pdfDoc.fontSize(20);
+				pdfDoc.text(
+					"Total Price : " +
+					" $" +
+					totalPrice
+				);
+				pdfDoc.pipe(fs.createWriteStream(invoicePath));
+				pdfDoc.pipe(res);
+				pdfDoc.end();
 			}
 		})
 		.catch(err => {
 			return next(err);
 		});
-	
-	const invoiceName = 'invoice-'+orderId+'.txt';
-	const invoicePath = path.join('data', 'invoices', invoiceName);
-	fs.readFile(invoicePath, (err, data)=> {
-		if(err){
-			console.log("Error sending file")
-			return next(err);
-		}
-		else {
-			console.log("Sending file");
-			res.setHeader("Content-Type", "application/text");
-			res.setHeader("Content-Disposition", 'attachment; filename="Invoice.txt"');
-			res.send(data);
-		}
-	})
 }
 
 // exports.getCheckout = (req, res, next)=>{
