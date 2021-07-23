@@ -1,4 +1,4 @@
-# Shop-Clone-Node
+# Shop
 A shopping website made while I was learning NodeJs. Started from writing simple console logs, currently a full website with the following features.
 
 <hr/>
